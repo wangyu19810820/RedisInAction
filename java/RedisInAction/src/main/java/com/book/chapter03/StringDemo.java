@@ -4,7 +4,7 @@ import redis.clients.jedis.BitOP;
 import redis.clients.jedis.Jedis;
 
 /**
- * Redis的基本类型操作，操作的时候自动识别是否是整数，浮点，字符串
+ * Redis的String类型操作，操作的时候自动转换成整数，浮点数
  */
 public class StringDemo {
 
