@@ -21,9 +21,9 @@ public class ZSetDemo {
         jedis.del(KEY_1);
         jedis.del(KEY_2);
         jedis.del(KEY_3);
-//        basic();
+        basic();
 //        range();
-        math();
+//        math();
         jedis.close();
     }
 
@@ -39,6 +39,8 @@ public class ZSetDemo {
         jedis.zincrby(KEY_1, 10.0, "a");
         System.out.println("a的排名：" + jedis.zrank(KEY_1, "a"));
         System.out.println("b的排名：" + jedis.zrank(KEY_1, "b"));
+        System.out.println("a的排名(分值由大到小)：" + jedis.zrevrank(KEY_1, "a"));
+        System.out.println("c的排名(分值由大到小)：" + jedis.zrevrank(KEY_1, "c"));
         System.out.println(jedis.zscore(KEY_1, "a"));
         System.out.println(jedis.zcard(KEY_1));
         System.out.println(jedis.zcount(KEY_1, 200, 300));
