@@ -1,7 +1,7 @@
 1.一个用户域user:，且有一个user id生成器
 2.一个登陆域login:，且有一个hash，存放登陆用户token和登陆用户id
 3.一个最近token域recent:，且有一个有序集合，存放token和时间
-4.一个登陆用户浏览历史域view:xxxToken:，且有一个有序集合，存放商品id和浏览时间
+4.一个登陆用户浏览历史域view:xxxToken:，且有一个有序集合，存放该用户最近浏览的25个商品id和浏览时间
 5.一个购物车域cart:xxxToken:，且有一个hash，存放商品id和购买数量
 6.一个页面缓存域cache:，以cache:xxxUrl:为键，存放页面缓存
 7.一个数据缓存调度域schedule:，延迟设置域delay:
@@ -10,5 +10,6 @@ UserService，新增用户
 LoginService，用户通过token，登陆。清除旧token。
 ItemService，浏览商品，更新用户token，
 CartService，添加到购物车
-CacheService，处理页面缓存和数据缓存
+PageCacheService，处理页面缓存，判断该页面是否能缓存。不能缓存的直接返回内容。能缓存的先从缓存中寻找。
+DataCacheService，处理数据缓存。分为设置程序和处理程序。设置程序设置某行何时需要缓存。处理程序无限循环运行，根据设置制作数据缓存。
 

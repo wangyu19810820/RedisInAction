@@ -9,6 +9,7 @@ public class UserService {
 
     public static final String USER = "user:";
 
+    // 返回新用户id
     public static String newUser() {
         return USER + jedis.incr(USER);
     }
