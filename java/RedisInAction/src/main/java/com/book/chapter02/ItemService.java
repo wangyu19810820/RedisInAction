@@ -26,4 +26,13 @@ public class ItemService {
         jedis.zremrangeByRank(VIEW + token, 0, -MAX_RECENT_VIEW_COUNT - 1);
         jedis.zincrby(VIEW, -1, item);
     }
+
+    public static void rescale_viewed() {
+        jedis.zremrangeByRank(VIEW, 20000, -1);
+        try {
+            Thread.sleep(5 * 60);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
