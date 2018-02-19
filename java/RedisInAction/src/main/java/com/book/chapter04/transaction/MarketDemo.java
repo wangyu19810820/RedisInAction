@@ -15,13 +15,26 @@ public class MarketDemo {
     static Jedis jedis = JedisFactory.getSingleJedis();
 
     public static void main(String[] args) {
+        init();
         testSell();
+        testBuy();
+    }
+
+    public static void init() {
+        String userID = "1";
+        jedis.hset("user:1", "funds", "200");
+        jedis.hset("user:2", "funds", "300");
+        jedis.sadd("inventory:" + userID, "item1", "item2");
+    }
+
+    public static void testBuy() {
+        boolean result = buy("2", "1", "item1", 10);
+        System.out.println(result);
     }
 
     public static void testSell() {
-        String userID = "1";
-//        jedis.sadd("inventory:" + userID, "item1", "item2");
-        sell("item1", userID, 100);
+        boolean result = sell("item1", "1", 10);
+        System.out.println(result);
     }
 
     // 将商品放入市场
@@ -64,7 +77,7 @@ public class MarketDemo {
         // 购买者信息hash的key
         String buyer = "user:" + buyerID;
         // 贩卖者信息hash的key
-        String seller = "seller:" + sellerID;
+        String seller = "user:" + sellerID;
 
         long end = System.currentTimeMillis() + 5000;
         while (System.currentTimeMillis() < end) {
@@ -80,7 +93,10 @@ public class MarketDemo {
             // 购买商品，将商品从市场上撤下，添加到购买者背包
             // 购买者扣除价格，贩卖者增加相等的金钱
             Transaction trans = jedis.multi();
-
+            trans.hincrByFloat(buyer, "funds", -price);
+            trans.hincrByFloat(seller, "funds", price);
+            trans.zrem("market:", item);
+            trans.sadd(inventory, itemID);
             List<Object> list = trans.exec();
             if (list == null) {
                 // trans.exec()返回null，代表在执行过程中，监视的对象发生了变化
