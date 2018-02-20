@@ -3,6 +3,7 @@ package com.book.chapter04.pipe;
 import com.JedisFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Transaction;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,8 +18,12 @@ public class PipeDemo {
 
     static Jedis jedis = JedisFactory.getSingleJedis();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         jedis.flushAll();
+        testTranscationAndPipeline();
+    }
+
+    public static void testUpdateToken() throws Exception {
         int count = 0;
         long end = System.currentTimeMillis() + 10000;
         while (System.currentTimeMillis() < end) {
@@ -52,5 +57,23 @@ public class PipeDemo {
         pipe.zincrby("view:", 1, itemID);
         pipe.exec();
         pipe.close();
+    }
+
+    public static void testTranscationAndPipeline() throws Exception {
+//        Transaction trans = jedis.multi();
+//        trans.set("string1", "aa");
+//        trans.incr("string1");
+//        trans.set("string2", "xx");
+//        trans.exec();
+//        trans.close();
+
+        Pipeline pipeline = jedis.pipelined();
+        pipeline.multi();
+        pipeline.set("string3", "aa");
+        pipeline.incr("string3");
+        pipeline.set("string4", "xx");
+        pipeline.exec();
+        pipeline.close();
+
     }
 }
