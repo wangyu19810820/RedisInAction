@@ -18,6 +18,8 @@ import java.util.Set;
 // b.csv内的数据，城市代码对应城市描述，存储到redis中的hash中
 // 程序内容，将ip转换成分值，zrevrangeByScore查询有序集合中的分值的段，找到匹配的城市
 // 再从hash中找到城市描述
+
+// 可能是数据格式过时，这个程序不具备实用性，实用时，需重新研究GeoLiteCity的数据格式
 public class IPMapper {
 
     static Jedis jedis = JedisFactory.getSingleJedis();
