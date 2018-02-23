@@ -12,6 +12,17 @@ public class SimpleLockUtil {
     static Jedis jedis = JedisFactory.getSingleJedis();
 
     public static void main(String[] args) {
+        testAcquireLockWithTimeout();
+    }
+
+    public static void testAcquireLockWithTimeout() {
+//        String identifier = acquire_lock("market", 10);
+//        System.out.println("first:" + identifier);
+        String identifier1 = acquire_lock_with_timeout("market", 10, 10);
+        System.out.println("second:" + identifier1);
+    }
+
+    public static void testAcquireLock() {
         String identifier = acquire_lock("market", 10);
         System.out.println("first:" + identifier);
         identifier = acquire_lock("market", 10);
@@ -57,5 +68,27 @@ public class SimpleLockUtil {
                 return false;
             }
         }
+    }
+
+    // 在acquireTimeout期内，设置锁键的值（仅新增成功模式），
+    // 如果该锁没有设置超时时间，设置超时时间
+    public static String acquire_lock_with_timeout(String lockName, int acquireTimeout, int lockTimeout) {
+        String key = "lock:" + lockName;
+        String identifier = UUID.randomUUID().toString();
+        long end = System.currentTimeMillis() + acquireTimeout * 1000;
+        while (System.currentTimeMillis() < end) {
+            if (jedis.setnx(key, identifier) == 1) {
+                jedis.expire(key, lockTimeout);
+                return identifier;
+            } else if (jedis.ttl(key) == -1) {
+                jedis.expire(key, lockTimeout);
+            }
+            try {
+                Thread.sleep(1);
+            }catch(InterruptedException ie){
+                Thread.currentThread().interrupt();
+            }
+        }
+        return null;
     }
 }
