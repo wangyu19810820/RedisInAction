@@ -6,9 +6,9 @@ import java.util.Map;
 public class ChatMessagesModel {
 
     public String chatId;
-    public List<Map<String,Object>> messages;
+    public List<MessageModel> messages;
 
-    public ChatMessagesModel(String chatId, List<Map<String,Object>> messages){
+    public ChatMessagesModel(String chatId, List<MessageModel> messages){
         this.chatId = chatId;
         this.messages = messages;
     }

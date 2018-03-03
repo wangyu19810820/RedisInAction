@@ -24,7 +24,9 @@ public class GroupDemo {
 //        set.add("2");
 //        set.add("3");
 //        createChat("1", set, "aa", String.valueOf(chatId));
-//
+
+//        long chatId1 = jedis.incr("chat:");
+//        createChat("1", set, "aa", String.valueOf(chatId1));
 //        sendMessage("2", "1", "bb");
 
         fetchPendingMessages("1");
@@ -88,14 +90,41 @@ public class GroupDemo {
         trans.exec();
         trans.close();
 
+        // 将该用户的msg封装到对象中
+        // 修改状态（seen:userID中的分值，chat:chatID中的分值，msg:chatID中所有已读消息）
         List<ChatMessagesModel> chatMessagesModelList = new ArrayList<>();
         List<Object[]> seenUpdates = new ArrayList<Object[]>();
         List<Object[]> msgRemoves = new ArrayList<Object[]>();
         for (int i = 0; i < seenList.size(); i++) {
+            // 从seenList中获取chatID
+            Tuple tuple = seenList.get(i);
+            String chatID = tuple.getElement();
+            int maxSeenMsgID = (int)(double)jedis.zscore("seen:" + recipient, chatID);
+
             Response<Set<String>> res1 = msgResList.get(i);
             Set<String> msgSet = res1.get();
             List<MessageModel> messageModelList = new ArrayList<>();
+            for (String msg : msgSet) {
+                Gson gson = new Gson();
+                MessageModel messageModel = gson.fromJson(msg, MessageModel.class);
+                messageModelList.add(messageModel);
+                int msgID = Integer.parseInt(messageModel.getId());
+                if (msgID > maxSeenMsgID) {
+                    maxSeenMsgID = msgID;
+                }
+            }
 
+            chatMessagesModelList.add(new ChatMessagesModel(chatID, messageModelList));
+
+            // 修改seen:userID中,chatID对应的分值。修改chat:chatID中，userID对应分值
+            // 删除msg:chatID中分值小于chat:chatID最小值的消息
+            jedis.zadd("seen:" + recipient, maxSeenMsgID, chatID);
+            jedis.zadd("chat:" + chatID, maxSeenMsgID, recipient);
+            Set<Tuple> set = jedis.zrangeWithScores("chat:" + chatID, 0, 0);
+            if (set.size() > 0) {
+                double score = set.iterator().next().getScore();
+                jedis.zremrangeByScore("msgs:" + chatID, 0, score);
+            }
         }
 
         return chatMessagesModelList;

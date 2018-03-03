@@ -7,6 +7,7 @@ import redis.clients.jedis.Transaction;
 
 import java.util.List;
 
+// 使用自制锁的
 public class MarketUsingSimpleLock {
 
     static Jedis jedis = JedisFactory.getSingleJedis();
