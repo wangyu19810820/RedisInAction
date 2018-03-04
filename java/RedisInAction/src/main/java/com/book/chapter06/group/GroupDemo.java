@@ -14,6 +14,7 @@ import java.util.*;
 // 一个是聊天室有序集合，成员是聊天室用户id，分值是用户接收到该聊天室消息的最大id
 // 一个是用户接收消息有序集合，成员是聊天室id，分值是用户接收到该聊天室消息的最大id
 // 一个是消息有序集合，成员是消息内容，分值是消息id
+// 还有两个辅助的自增对象，一个是chat:用于自增聊天室id，一个是ids:chatID用于自增聊天室的消息id
 public class GroupDemo {
 
     static Jedis jedis = JedisFactory.getSingleJedis();
