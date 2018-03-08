@@ -1,4 +1,4 @@
-package com.book.chapter07;
+package com.book.chapter07.search;
 
 import com.JedisFactory;
 import redis.clients.jedis.Jedis;
@@ -8,9 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.book.chapter07.Constants.*;
+import static com.book.chapter07.search.Constants.*;
 
 // 将文档内的有效字符（token，word）取出来，做反向索引
 // 1.剔除过短的字符，2.剔除常用词，3建立反向索引：有效字符的集合包含文档id

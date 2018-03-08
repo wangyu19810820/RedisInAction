@@ -1,12 +1,11 @@
-package com.book.chapter07;
+package com.book.chapter07.search;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.book.chapter07.Constants.*;
+import static com.book.chapter07.search.Constants.*;
 
 // 将查询表达式转换成Query对象
 public class QueryUtil {

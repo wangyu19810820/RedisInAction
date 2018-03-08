@@ -1,4 +1,4 @@
-package com.book.chapter07;
+package com.book.chapter07.search;
 
 import java.util.ArrayList;
 import java.util.HashSet;
