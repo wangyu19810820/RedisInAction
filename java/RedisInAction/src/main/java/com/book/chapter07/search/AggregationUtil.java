@@ -58,6 +58,11 @@ public class AggregationUtil {
         return zsetCommon(trans, "zinterstore", ttl, params, sets);
     }
 
+    public static String zunion(
+            Transaction trans, int ttl, ZParams params, String... sets) {
+        return zsetCommon(trans, "zunionstore", ttl, params, sets);
+    }
+
     // 集合运算，运算结果做为一个新的临时集合，返回
     private static String setCommon(Transaction trans, String method, int ttl, String... items)
     {

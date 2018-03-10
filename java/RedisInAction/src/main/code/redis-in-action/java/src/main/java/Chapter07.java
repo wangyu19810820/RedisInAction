@@ -942,6 +942,7 @@ public class Chapter07 {
                 return diff < 0 ? -1 : diff > 0 ? 1 : 0;
             }
             return this.word.compareTo(other.word);
+            return this.word.compareTo(other.word);
         }
 
         public String toString(){

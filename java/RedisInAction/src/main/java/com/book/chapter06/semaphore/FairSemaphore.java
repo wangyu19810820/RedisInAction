@@ -69,7 +69,7 @@ public class FairSemaphore {
         Transaction transaction = jedis.multi();
         transaction.zremrangeByScore(semname.getBytes(), "-inf".getBytes(), String.valueOf(now - timeout).getBytes());
         ZParams zParams = new ZParams();
-        zParams.weights(1, 0);
+        zParams.weights(1, 0);// 结果集合中，czset里面的分值将被保留，semname中的分值乘以0也就是完全无效
         transaction.zinterstore(czset, zParams, czset, semname);
 
         // 获取计数器值

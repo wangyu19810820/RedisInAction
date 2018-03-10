@@ -1,7 +1,12 @@
 package com.book.chapter07.advice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 // 统一计费方式工具类，可将值缓存起来
 public class PriceUtil {
+
+    public static Map<PriceType,Double> AVERAGE_PER_1K = new HashMap<PriceType,Double>();
 
     // 统一计费方式
     // 按千次浏览量计费，原值返回
